@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* html{
+    background-image: linear-gradient(to right, #ffffff, #dfdeeb, #c0bdd7, #a09ec3, #8080b0);
+    background-repeat: no-repeat;
+    height: 100%;
+    background-size: cover;
+} */
+html{
+    background-color: #F9F9F9;
+}
+
+body{
+        font-family: 'Clash Display', 'Sans-serif'; 
+        letter-spacing: .2px;
+}
