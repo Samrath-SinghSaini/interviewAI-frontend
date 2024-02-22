@@ -1,0 +1,6 @@
+21/02/2024: 
+Things to implement next - 
+1. Submit all user responses and display them on a new results page. 
+2. Send the submitted response to the backend
+3. Understand how to transcribe the video/audio input to text for use by ChatGPT
+4. Add formatting and comments to all the code. 

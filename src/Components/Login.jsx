@@ -40,7 +40,7 @@ function Login() {
       <div className="flex-wrapper flex flex-col lg:flex-row justify-around">
         <div>
           <h2>Sign in to your InterviewAI account</h2>
-          <div className="block py-2 text-left">
+          <div className="block py-2 text-center lg:text-left">
             <label className="block py-2">Username</label>
             <input
               type="text"
@@ -51,7 +51,7 @@ function Login() {
               name="userName"
             ></input>
           </div>
-          <div className="block py-2 text-left">
+          <div className="block py-2 text-center lg:text-left">
             <label className="block py-2">Email</label>
             <input
               type="email"
@@ -62,8 +62,9 @@ function Login() {
               name="email"
             ></input>
           </div>
-          <div className="block py-2 text-left">
+          <div className="block py-2 text-center lg:text-left">
             <label className="block py-2">Password</label>
+            <div className="text-center lg:text-left sm:m-auto flex justify-center items-center w-1/3">
             <input
               type={passInputType}
               className="border-2 border-black p-2"
@@ -77,8 +78,9 @@ function Login() {
            
           </i>
           </div>
+          </div>
           
-          <button className="float-left p-2 my-4 border-black border-2">
+          <button className="p-2 my-4 border-black border-2 text-center lg:text-left">
             Submit
           </button>
         </div>

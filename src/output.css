@@ -8,6 +8,20 @@
     height: 100%;
     background-size: cover;
 } */
+@layer base{
+    button{
+        @apply p-1.5 text-white text-base bg-blue-600 mx-1.5 my-0.5 text-xl;
+    }
+    input{
+        @apply p-1 border-gray-800 border rounded-sm;
+    }
+    .answer-wrapper{
+        @apply p-5 border-gray-800 border-2 rounded-md w-2/3 mx-auto my-10
+    }
+    .choice-btn{
+        @apply m-0 border-white border text-base px-3
+    }
+}
 html{
     background-color: #F9F9F9;
 }

@@ -9,6 +9,8 @@ function Header() {
       <button className="p-1.5 text-white text-base bg-blue-600 mx-1.5 my-0.5 text-xl"  onClick={()=>{navigate('/')}}>Home</button>
       <button className="p-1.5 text-white text-base bg-blue-600 mx-1.5 my-0.5 text-xl" onClick={()=>{navigate('/login')}}>Login</button>
       <button className="p-1.5 text-white text-base bg-blue-600 mx-1.5 my-0.5 text-xl" onClick={()=>{navigate('/register')}}>Register</button>
+      <button className="p-1.5 text-white text-base bg-blue-600 mx-1.5 my-0.5 text-xl" onClick={()=>{navigate('/home')}}>User</button>
+      <button className="p-1.5 text-white text-base bg-blue-600 mx-1.5 my-0.5 text-xl" onClick={()=>{navigate('/interview/')}}>Interview</button>
       </div>
     </div>
   );
