@@ -1,6 +1,16 @@
+26/02/2024: 
+On submit, each answer box will return an object, which will contain: 
+1. Question 2.Answer format 3. Answer 4.Index of the Answer 
+This answer object will be added to an array in the top level component 
+Now we have all the data in the form of this array of objects 
+Next, we will display it in a answers page, which will be laid out exactly like the interview page.
+
+We will also be sending the array of objects to the backend
+-----------------
 21/02/2024: 
 Things to implement next - 
 1. Submit all user responses and display them on a new results page. 
 2. Send the submitted response to the backend
 3. Understand how to transcribe the video/audio input to text for use by ChatGPT
 4. Add formatting and comments to all the code. 
+-----------------

@@ -5,6 +5,11 @@ import Mic from "@mui/icons-material/Mic";
 import AnswerBox from "./AnswerBox";
 //reminder to start adding comments to your code
 //I am opening this file after two months and have no idea what any of this means
+//Update: Commenting does not help I opened this last week and I am just as confused as I was wo any comments 
+//Things to add to this file before I forget: 
+//Hide 'record again' btn
+//make sure record again btn works 
+//will add more as I think of them
 function InterviewPage() {
   const serverBaseURL = "http://localhost:3000";
   const [questionArr, setQuestionArr] = useState([]);
@@ -18,8 +23,9 @@ function InterviewPage() {
   const [minuteTimer, setMinuteTimer] = useState(0);
   const [hourTimer, setHourTimer] = useState(0);
   const [answerFormat, setAnswerFormat] = useState({video:true,audio:false, text:false})
-  
-
+  const answerObj = {question: null, answerType: null, answer:null, index:null }
+  const [answerArr, setAnswerArr] = useState([])
+  const [answerAgain, setAnswerAgain] = useState(false)
   useEffect(() => {
     //what does this useEffect do? why is this here?
     //oh I guess it gets interview questions that I commented out because I didn't wanna make too many api calls, makes sense
@@ -61,182 +67,21 @@ function InterviewPage() {
     }
   }
 
-  //for video input
-
-  function startRecorder() {
-    if (!camVisibility) {
-      setCamVisibility(true);
-    }
-    if (
-      "mediaDevices" in navigator &&
-      "getUserMedia" in navigator.mediaDevices
-    ) {
-      let constraints = {
-        audio: true,
-        video: {
-          facingMode: "User",
-          width: { min: 640, ideal: 1280 },
-          height: { min: 480, ideal: 720 },
-        },
-      };
-
-      navigator.mediaDevices
-        .getUserMedia(constraints)
-        .then((mediaStreamObj) => {
-          let video = document.getElementById("videoRec");
-          let userVideo = document.getElementById("videoRec1");
-          if ("srcObject" in video) {
-            video.srcObject = mediaStreamObj;
-          } else {
-            video.src = window.URL.createObjectURL(mediaStreamObj);
-          }
-
-          if (video.onloadedmetadata) {
-            video.play();
-          }
-          let mediaRecorder = new MediaRecorder(mediaStreamObj);
-
-          mediaRecorder.start();
-          setMediaRecorder(mediaRecorder);
-          setRecorderStarted(true);
-          setRecording(true);
-        });
-    }
-  }
-  function stopRecorder() {
-    if (recording) {
-      let userVideo = document.getElementById("videoRec1");
-      let video = document.getElementById("videoRec");
-      if ("srcObject" in video) {
-        let srcObj = video.srcObject;
-        let tracks = srcObj.getTracks();
-        tracks.forEach((track) => {
-          track.stop();
-        });
-        video.srcObject = null;
-      } else {
-        video.src = window.URL.createObjectURL(null);
-      }
-      setCamVisibility(false);
-      let chunksArr = [];
-      console.log(mediaRecorder);
-      mediaRecorder.ondataavailable = (ev) => {
-        console.log("data available");
-        chunksArr.push(ev.data);
-      };
-      mediaRecorder.onstop = (ev) => {
-        let blob = new Blob(chunksArr, { type: "video/mp4" });
-        console.log(blob);
-        chunksArr = []
-        let url = window.URL.createObjectURL(blob);
-        console.log(url);
-        userVideo.src = url;
-      };
-      mediaRecorder.stop();
-      setRecording(false);
-      console.log(mediaRecorder.state);
-    }
-  }
-  function recordAgain() {
-    startRecorder();
-  }
-
-//For audio input
  
-  function recordAudio() {
-    let second = 0;
-    let hour = 0;
-    let minute = 0;
-    let count = 0;
-    audioTimer.current = setInterval(() => {
-      count++;
-      second++;
-      if (count >= (minute + 1) * 60) {
-        minute++;
-        second = 0;
-        setSecondTimer(second);
-        setMinuteTimer(minute);
-      }
-      if (minute >= (hour + 1) * 60) {
-        hour++;
-        second = 0;
-        minute = 0;
-        setSecondTimer(second);
-        setMinuteTimer(minute);
-        setHourTimer(hour);
-      }
-      setSecondTimer(second);
-
-    }, 1000);
-    if (
-      navigator.mediaDevices && navigator.mediaDevices.getUserMedia
-    ) {
-      let constraints = { audio: true };
-      navigator.mediaDevices
-        .getUserMedia({audio:true})
-        .then((mediaStream) => {
-         
-          let mediaRecorder = new MediaRecorder(mediaStream);
-          mediaRecorder.start();
-          setAudioMediaRecorder(mediaRecorder);
-
-          // let audio = document.getElementById("audio1");
-          // if ("srcObject" in audio) {
-          //   audio.srcObject = mediaStream;
-          // } else {
-          //   audio.src = URL.createObjectURL(mediaStream);
-          // }
-
-        })
-        .catch((err) => {
-          console.log(err)
-          console.log("haha nahi chala lol");
-        });
-    }
+  function answerSubmission(newData){
+    /*data format:  {
+      index: prop.index,
+      question: prop.val.question,
+      answer: finalAnswer,
+    };
+    answer is object with {data:data, format:answerformat}*/
+    // console.log(newData)
+    setAnswerArr((prev)=>{return [...prev,newData]})
+  }
+  function submitInterview(){
+    console.log(answerArr)
   }
 
-  function stopAudio() {
-    if (audioMediaRecorder) {
-      let audio = document.getElementById("audio1");
-
-      let chunks = [];
-      audioMediaRecorder.ondataavailable = (ev) => {
-        chunks.push(ev.data);
-        console.log(chunks);
-      };
-      audioMediaRecorder.onstop = (ev) => {
-        let blob = new Blob(chunks, { type: "audio/mp3" });
-        console.log(blob);
-        let audioURL = window.URL.createObjectURL(blob);
-        
-       audio.src = audioURL
-      };
-      audioMediaRecorder.stop()
-      clearInterval(audioTimer.current)
-      setHourTimer(0)
-      setMinuteTimer(0)
-      setSecondTimer(0)
-      console.log(audioMediaRecorder.state)
-
-    }
-  }
-  function submitAudio() {
-    stopAudio()
-    audioMediaRecorder.stop()
-  }
-  function setInputType(e){
-    let val = e.target.value
-    console.log(val)
-    if(val == 'audio'){
-      setAnswerFormat({text:false, video:false, audio:true})
-    }
-    else if(val == 'text'){
-      setAnswerFormat({text:true, audio:false,video:false})
-    }
-    else if(val == 'video'){
-      setAnswerFormat({video:true, audio:false, text:false})
-    } 
-  }
   return (
     <div className="text-center m-5">
       {/* <div className="start-wrapper">
@@ -246,172 +91,12 @@ function InterviewPage() {
     </div> */}
       <div className="main-wrapper">
       {interviewQuestions.map((value, index)=>{
-        return <AnswerBox key={index} index={index} val={value}/>
+        return <AnswerBox key={index} index={index} val={value} answerSubmission={answerSubmission}/>
       })}
-      {/* {interviewQuestions.map((val, index)=>{
-        return <div className="answer-wrapper" key={index}>
-          <h1 className="text-xl">Question {(index+1)}</h1>
-          <h1 className="text-xl my-2">{val.question}</h1>
-          
-          <div className="choice-wrapper inline-block p-2 border-b-2 border-black border-t-2 ">
-          <p>Choose answer format</p>
-            <button onClick={(e)=>{setInputType(e)}} className="choice-btn rounded-md rounded-r-none" value='video'>
-              Video
-            </button>
-            <button onClick={(e)=>{setInputType(e)}} className="choice-btn" value='audio'>Audio</button>
-            <button onClick={(e)=>{setInputType(e)}} className="choice-btn rounded-md rounded-l-none" value='text'>
-              Text
-            </button>
-          </div>
-          <div style={answerFormat.video ? {display:'block'}: {display:'none'}} className="video-div answer-div text-center my-3">
-            <button
-              onClick={() => {
-                startRecorder();
-              }}
-            >
-              Record your answer
-            </button>
-            <video
-              style={{ display: camVisibility ? "Block" : "none" }}
-              className="block mx-auto"
-              width="600"
-              height="550"
-              controls
-              autoPlay
-              id="videoRec"
-            ></video>
-            <video
-              style={{ display: !camVisibility ? "Block" : "none" }}
-              className="block mx-auto"
-              width="600"
-              height="550"
-              controls
-              autoPlay
-              id="videoRec1"
-            ></video>
-            <button
-              onClick={() => {
-                startRecorder();
-              }}
-            >
-              Record again
-            </button>
-            <button
-              onClick={() => {
-                stopRecorder();
-              }}
-            >
-              Submit Response
-            </button>
-            <button>Next</button>
-          </div>
-          <div style={answerFormat.audio ? {display:'block'}: {display:'none'}} className="audio-div answer-divtext-center my-3">
-            <h2 className="text-xl">Audio</h2>
-            <button onClick={recordAudio}>Click here to start recording</button>
-            <div className="text-center">
-              <p>
-                <Mic></Mic>
-                <h1>
-                  {hourTimer <= 9 ? <>0{hourTimer}</> : <>{hourTimer}</>}:
-                  {minuteTimer <= 9 ? <>0{minuteTimer}</> : <>{minuteTimer}</>}:
-                  {secondTimer <= 9 ? <>0{secondTimer}</> : <>{secondTimer}</>}
-                </h1>
-              </p>
-              <audio
-                className="mx-auto my-1"
-                id="audio1"
-                controls
-              ></audio>
-            </div>
-            <button onClick={stopAudio}>Submit response</button>
-          </div>
-          <div style={answerFormat.text ? {display:'block'}: {display:'none'}} className="text-div answer-div text-center my-3">
-          <textarea className="h-40 w-96 border-gray-300 border-2 resize-none p-2 block mx-auto my-4 text-black" placeholder="Enter answer here"></textarea>
-          <button onClick={stopAudio}>Submit response</button>
-          </div>
-        </div>
-      })} */}
-        {/* <div className="answer-wrapper">
-          <h1 className="text-xl">Question 1.</h1>
-          <h1 className="text-xl my-2">{interviewQuestions[0].question}</h1>
-          
-          <div className="choice-wrapper inline-block p-2 border-b-2 border-black border-t-2 ">
-          <p>Choose answer format</p>
-            <button onClick={(e)=>{setInputType(e)}} className="choice-btn rounded-md rounded-r-none" value='video'>
-              Video
-            </button>
-            <button onClick={(e)=>{setInputType(e)}} className="choice-btn" value='audio'>Audio</button>
-            <button onClick={(e)=>{setInputType(e)}} className="choice-btn rounded-md rounded-l-none" value='text'>
-              Text
-            </button>
-          </div>
-          <div style={answerFormat.video ? {display:'block'}: {display:'none'}} className="video-div answer-div text-center my-3">
-            <button
-              onClick={() => {
-                startRecorder();
-              }}
-            >
-              Record your answer
-            </button>
-            <video
-              style={{ display: camVisibility ? "Block" : "none" }}
-              className="block mx-auto"
-              width="600"
-              height="550"
-              controls
-              autoPlay
-              id="videoRec"
-            ></video>
-            <video
-              style={{ display: !camVisibility ? "Block" : "none" }}
-              className="block mx-auto"
-              width="600"
-              height="550"
-              controls
-              autoPlay
-              id="videoRec1"
-            ></video>
-            <button
-              onClick={() => {
-                startRecorder();
-              }}
-            >
-              Record again
-            </button>
-            <button
-              onClick={() => {
-                stopRecorder();
-              }}
-            >
-              Submit Response
-            </button>
-            <button>Next</button>
-          </div>
-          <div style={answerFormat.audio ? {display:'block'}: {display:'none'}} className="audio-div answer-divtext-center my-3">
-            <h2 className="text-xl">Audio</h2>
-            <button onClick={recordAudio}>Click here to start recording</button>
-            <div className="text-center">
-              <p>
-                <Mic></Mic>
-                <h1>
-                  {hourTimer <= 9 ? <>0{hourTimer}</> : <>{hourTimer}</>}:
-                  {minuteTimer <= 9 ? <>0{minuteTimer}</> : <>{minuteTimer}</>}:
-                  {secondTimer <= 9 ? <>0{secondTimer}</> : <>{secondTimer}</>}
-                </h1>
-              </p>
-              <audio
-                className="mx-auto my-1"
-                id="audio1"
-                controls
-              ></audio>
-            </div>
-            <button onClick={stopAudio}>Submit response</button>
-          </div>
-          <div style={answerFormat.text ? {display:'block'}: {display:'none'}} className="text-div answer-div text-center my-3">
-          <textarea className="h-40 w-96 border-gray-300 border-2 resize-none p-2 block mx-auto my-4 text-black" placeholder="Enter answer here"></textarea>
-          <button onClick={stopAudio}>Submit response</button>
-          </div>
-        </div> */}
+      <div>
+        <p>This is the end of your Interview. You can now submit the Interview</p>
+        <button onClick={submitInterview}>Submit Interview</button>
+      </div>
       </div>
     </div>
   );

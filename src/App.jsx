@@ -10,6 +10,7 @@ import Home from "./Components/Home";
 import InterviewPage from "./Components/InterviewPage";
 import PreInterview from "./Components/PreInterview";
 import Instructions from "./Components/Instructions"
+import AnswerPage from "./Components/AnswerPage";
 function App() {
   return (
     <>
@@ -27,7 +28,7 @@ function App() {
           <Route path=""  element={<PreInterview/>} />
           <Route path="instructions" element={<Instructions/>}/>
           <Route path="main" element={<InterviewPage/>}/>
-
+          <Route path="answers" element={<AnswerPage/>}/>
         </Route>
         <Route path="/*" element={<Error />}></Route>
       </Routes>
