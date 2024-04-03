@@ -1,14 +1,17 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import { interviewQuestions } from "../interviewStuff";
 import Mic from "@mui/icons-material/Mic";
 import AnswerBox from "./AnswerBox";
+import { AnswerContext } from "../App";
+import { useNavigate } from "react-router-dom";
+import Axios from "axios";
 //reminder to start adding comments to your code
 //I am opening this file after two months and have no idea what any of this means
-//Update: Commenting does not help I opened this last week and I am just as confused as I was wo any comments 
-//Things to add to this file before I forget: 
+//Update: Commenting does not help I opened this last week and I am just as confused as I was wo any comments
+//Things to add to this file before I forget:
 //Hide 'record again' btn
-//make sure record again btn works 
+//make sure record again btn works
 //will add more as I think of them
 function InterviewPage() {
   const serverBaseURL = "http://localhost:3000";
@@ -18,15 +21,29 @@ function InterviewPage() {
   const [camVisibility, setCamVisibility] = useState(true);
   const [recording, setRecording] = useState(false);
   const [recorderStarted, setRecorderStarted] = useState(false);
-  const audioTimer = useRef()
+  const audioTimer = useRef();
   const [secondTimer, setSecondTimer] = useState(0);
   const [minuteTimer, setMinuteTimer] = useState(0);
   const [hourTimer, setHourTimer] = useState(0);
-  const [answerFormat, setAnswerFormat] = useState({video:true,audio:false, text:false})
-  const answerObj = {question: null, answerType: null, answer:null, index:null }
-  const [answerArr, setAnswerArr] = useState([])
-  const [answerAgain, setAnswerAgain] = useState(false)
+  const [answerFormat, setAnswerFormat] = useState({
+    video: true,
+    audio: false,
+    text: false,
+  });
+  const answerObj = {
+    question: null,
+    answerType: null,
+    answer: null,
+    index: null,
+  };
+  const [answerArr, setAnswerArr] = useState([]);
+  const [answerAgain, setAnswerAgain] = useState(false);
+  let navigate = useNavigate();
+  let { answerSet, setAnswerSet } = useContext(AnswerContext);
+  //let {answerBox, setAnswerBox} = useContext(AnswerContext)
   useEffect(() => {
+    console.log(answerSet);
+    // console.log(answerBox)
     //what does this useEffect do? why is this here?
     //oh I guess it gets interview questions that I commented out because I didn't wanna make too many api calls, makes sense
     // getInterviewQuestions()
@@ -67,8 +84,7 @@ function InterviewPage() {
     }
   }
 
- 
-  function answerSubmission(newData){
+  function answerSubmission(newData) {
     /*data format:  {
       index: prop.index,
       question: prop.val.question,
@@ -76,10 +92,29 @@ function InterviewPage() {
     };
     answer is object with {data:data, format:answerformat}*/
     // console.log(newData)
-    setAnswerArr((prev)=>{return [...prev,newData]})
+    setAnswerArr((prev) => {
+      return [...prev, newData];
+    });
   }
-  function submitInterview(){
-    console.log(answerArr)
+
+  function submitInterview() {
+    console.log(answerArr);
+    setAnswerSet(answerArr);
+    setTimeout(() => {
+      navigate("/interview/answers");
+    }, 2000);
+    axios
+      .post(serverBaseURL + "/api/v1/interview/answers",answerArr, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   return (
@@ -90,13 +125,22 @@ function InterviewPage() {
     <button>Start interview</button>
     </div> */}
       <div className="main-wrapper">
-      {interviewQuestions.map((value, index)=>{
-        return <AnswerBox key={index} index={index} val={value} answerSubmission={answerSubmission}/>
-      })}
-      <div>
-        <p>This is the end of your Interview. You can now submit the Interview</p>
-        <button onClick={submitInterview}>Submit Interview</button>
-      </div>
+        {interviewQuestions.map((value, index) => {
+          return (
+            <AnswerBox
+              key={index}
+              index={index}
+              val={value}
+              answerSubmission={answerSubmission}
+            />
+          );
+        })}
+        <div>
+          <p>
+            This is the end of your Interview. You can now submit the Interview
+          </p>
+          <button onClick={submitInterview}>Submit Interview</button>
+        </div>
       </div>
     </div>
   );

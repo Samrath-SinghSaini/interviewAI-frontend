@@ -38,10 +38,19 @@ function PreInterview() {
   }
 
   function stopCam() {
-    if (mediaObj !== null) {
-      mediaObj.getTracks().forEach((element, _) => element.stop());
+    if (mediaObj != null) {
+      let tracks = mediaObj.getTracks()
+      tracks.forEach((element, _) => {console.log(element) 
+      element.stop()
+    });
       setCamOn(false);
+      console.log('i ran') 
+    
     }
+  }
+  function startInterview(){
+    stopCam()
+    navigate('/interview/main')
   }
   async function getUserInput() {
     let count = 0;
@@ -245,7 +254,7 @@ function PreInterview() {
               />
             </div>
           </div>
-          <button className="align-top" onClick={()=>{navigate('/interview/main')}}>Start Interview</button>
+          <button className="align-top" onClick={startInterview}>Start Interview</button>
           <button onClick={stopCam}>Stop Cam</button>
         </div>
       </div>

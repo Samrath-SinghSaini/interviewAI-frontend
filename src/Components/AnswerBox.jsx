@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 
 function AnswerBox(prop) {
   const [mediaRecorder, setMediaRecorder] = useState();
+  const [mediaRecorderStream, setMediaRecorderStream] = useState();
   const [audioMediaRecorder, setAudioMediaRecorder] = useState();
   const [audioMediaStream, setAudioMediaStream] = useState();
   const [camVisibility, setCamVisibility] = useState(true);
@@ -78,6 +79,7 @@ function AnswerBox(prop) {
 
           mediaRecorder.start();
           setMediaRecorder(mediaRecorder);
+          setMediaRecorderStream(mediaStreamObj)
           setRecording(true);
           setSubmitBtnTxt(true)
         });
@@ -119,7 +121,7 @@ function AnswerBox(prop) {
         //console.log(url);
         userVideo.src = url;
         //clearing all active video streams and stopping cam and mic access
-        let videoTracks = mediaRecorder.getTracks()
+        let videoTracks = mediaRecorderStream.getTracks()
         videoTracks.forEach((track)=>{
           track.stop()
         })
@@ -145,7 +147,7 @@ function AnswerBox(prop) {
   //For audio input
 
   function recordAudio() {
-    audioStarted(true)
+    setAudioStarted(true)
     setSubmitBtnTxt(true)
     let second = 0;
     let hour = 0;

@@ -1,3 +1,12 @@
+01/04/2024: 
+-Most of core frontend functionality is added 
+-Need to prevent duplicate entries when user switches bw data formats after answering
+-Add submit and error messages 
+-Add 'Next' button after answer is submitted, user should only have choice bw 'submit again' and 'next'
+-Add login functionality after backend work is done. 
+
+----------------------------
+
 26/02/2024: 
 On submit, each answer box will return an object, which will contain: 
 1. Question 2.Answer format 3. Answer 4.Index of the Answer 

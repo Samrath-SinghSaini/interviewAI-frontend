@@ -1,6 +1,6 @@
 function Error(){
     return <>
-        <h1>Not found</h1>
+        <h1>error: Not found</h1>
     </>
 }
 

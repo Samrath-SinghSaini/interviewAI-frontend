@@ -21,6 +21,9 @@
     .choice-btn{
         @apply m-0 border-white border text-base px-3
     }
+    h1{
+        @apply text-xl
+    }
 }
 html{
     background-color: #F9F9F9;
@@ -30,3 +33,4 @@ body{
         font-family: 'Clash Display', 'Sans-serif'; 
         letter-spacing: .2px;
 }
+
